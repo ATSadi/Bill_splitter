@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.roomshare.WelcomeController">
+   <children>
+      <Label fx:id="welcomeLabel" text="Welcome to RoomShare!" textFill="#2c3e50">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <Label text="Manage shared chores and bills with your roommates" textFill="#7f8c8d">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER" spacing="15" style="-fx-padding: 30;">
+         <children>
+            <Button fx:id="setupButton" mnemonicParsing="false" onAction="#onSetupClick" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Setup Roommates &amp; Bills">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="choresButton" mnemonicParsing="false" onAction="#onChoresClick" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Chore Board">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="billsButton" mnemonicParsing="false" onAction="#onBillsClick" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Shared Bill Tracker">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="balanceButton" mnemonicParsing="false" onAction="#onBalanceClick" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Balance &amp; Settlement">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="historyButton" mnemonicParsing="false" onAction="#onHistoryClick" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="History &amp; Filters">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="reportsButton" mnemonicParsing="false" onAction="#onReportsClick" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #1abc9c; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="Reports &amp; Charts">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+</VBox>
+
