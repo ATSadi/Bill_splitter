@@ -47,33 +47,47 @@ public class WelcomeController {
     }
 
     @FXML
-    private void onChoresClick() {
-        // Will be implemented later
-        System.out.println("Chore Board - Coming soon!");
+    private void onChoresClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(RoomShareApplication.class.getResource("chore-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Stage stage = (Stage) choresButton.getScene().getWindow();
+        stage.setTitle("RoomShare - Chore Board");
+        stage.setScene(scene);
     }
 
     @FXML
-    private void onBillsClick() {
-        // Will be implemented later
-        System.out.println("Bill Tracker - Coming soon!");
+    private void onBillsClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(RoomShareApplication.class.getResource("bill-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Stage stage = (Stage) billsButton.getScene().getWindow();
+        stage.setTitle("RoomShare - Shared Bill Tracker");
+        stage.setScene(scene);
     }
 
     @FXML
-    private void onBalanceClick() {
-        // Will be implemented later
-        System.out.println("Balance & Settlement - Coming soon!");
+    private void onBalanceClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(RoomShareApplication.class.getResource("balance-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Stage stage = (Stage) balanceButton.getScene().getWindow();
+        stage.setTitle("RoomShare - Balance & Settlement");
+        stage.setScene(scene);
     }
 
     @FXML
-    private void onHistoryClick() {
-        // Will be implemented later
-        System.out.println("History & Filters - Coming soon!");
+    private void onHistoryClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(RoomShareApplication.class.getResource("history-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Stage stage = (Stage) historyButton.getScene().getWindow();
+        stage.setTitle("RoomShare - History & Filters");
+        stage.setScene(scene);
     }
 
     @FXML
-    private void onReportsClick() {
-        // Will be implemented later
-        System.out.println("Reports & Charts - Coming soon!");
+    private void onReportsClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(RoomShareApplication.class.getResource("report-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Stage stage = (Stage) reportsButton.getScene().getWindow();
+        stage.setTitle("RoomShare - Reports & Charts");
+        stage.setScene(scene);
     }
 }
-

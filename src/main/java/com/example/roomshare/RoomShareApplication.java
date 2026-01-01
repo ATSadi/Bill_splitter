@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class RoomShareApplication extends Application {
+    
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(RoomShareApplication.class.getResource("welcome-view.fxml"));
@@ -21,4 +22,3 @@ public class RoomShareApplication extends Application {
         launch();
     }
 }
-

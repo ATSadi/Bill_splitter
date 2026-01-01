@@ -105,4 +105,3 @@ public class SetupController {
         stage.setScene(scene);
     }
 }
-
