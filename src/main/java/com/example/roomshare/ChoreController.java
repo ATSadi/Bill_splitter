@@ -3,22 +3,22 @@ package com.example.roomshare;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ChoreController {
+
+    @FXML
+    private ChoiceBox<String> roomNameChoiceBox;
 
     @FXML
     private TextField choreNameField;
 
     @FXML
-    private TextField assignedToField;
+    private ComboBox<String> assignedToComboBox;
 
     @FXML
     private Button addChoreButton;
@@ -35,51 +35,109 @@ public class ChoreController {
     @FXML
     private Label statusLabel;
 
+    private DatabaseHelper db = DatabaseHelper.getInstance();
+
     @FXML
     private void initialize() {
-        statusLabel.setText("Add chores and assign them to roommates");
+        statusLabel.setText("Select room name and select assigned person from dropdown");
+        loadRooms();
+        roomNameChoiceBox.setOnAction(e -> {
+            loadRoommates();
+            refreshChores();
+        });
+    }
+
+    private void loadRooms() {
+        roomNameChoiceBox.getItems().setAll(db.getAllRooms());
+    }
+
+    private void loadRoommates() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            return;
+        }
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId != -1) {
+            assignedToComboBox.getItems().setAll(db.getRoommateNames(roomId));
+        }
     }
 
     @FXML
     private void onAddChoreClick() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
         String choreName = choreNameField.getText().trim();
-        String assignedTo = assignedToField.getText().trim();
+        String assignedToName = assignedToComboBox.getValue();
 
         if (choreName.isEmpty()) {
             statusLabel.setText("Please enter a chore name");
             return;
         }
 
-        if (assignedTo.isEmpty()) {
-            assignedTo = "Unassigned";
+        Integer assignedToId = null;
+        if (assignedToName != null && !assignedToName.isEmpty()) {
+            assignedToId = db.getRoommateIdByName(roomId, assignedToName);
+            if (assignedToId == null) {
+                statusLabel.setText("Error: Person not found in this room");
+                return;
+            }
         }
 
-        String choreInfo = "[ ] " + choreName + " - Assigned to: " + assignedTo;
-        choresList.getItems().add(choreInfo);
+        db.addChore(choreName, assignedToId, roomId);
         choreNameField.clear();
-        assignedToField.clear();
+        assignedToComboBox.setValue(null);
         statusLabel.setText("Chore added: " + choreName);
+        loadRooms();
+        refreshChores();
     }
 
     @FXML
     private void onMarkCompleteClick() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
         int selectedIndex = choresList.getSelectionModel().getSelectedIndex();
-        
         if (selectedIndex == -1) {
             statusLabel.setText("Please select a chore to mark as complete");
             return;
         }
 
-        String selectedChore = choresList.getSelectionModel().getSelectedItem();
-        
-        if (selectedChore != null && selectedChore.startsWith("[X]")) {
-            statusLabel.setText("This chore is already completed");
+        int roomId = db.createOrGetRoom(roomName);
+        List<Integer> choreIds = db.getChoreIds(roomId);
+        if (selectedIndex >= choreIds.size()) {
+            statusLabel.setText("Error: Invalid selection");
             return;
         }
 
-        String completedChore = selectedChore.replace("[ ]", "[X]");
-        choresList.getItems().set(selectedIndex, completedChore);
+        int choreId = choreIds.get(selectedIndex);
+        db.markChoreComplete(choreId);
         statusLabel.setText("Chore marked as complete!");
+        refreshChores();
+    }
+
+    private void refreshChores() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            choresList.getItems().clear();
+            return;
+        }
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId != -1) {
+            choresList.getItems().setAll(db.getChores(roomId));
+        }
     }
 
     @FXML

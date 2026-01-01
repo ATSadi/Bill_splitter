@@ -2,6 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
@@ -21,6 +23,16 @@
             <Font size="12.0" />
          </font>
       </Label>
+      <VBox spacing="10" prefWidth="500.0">
+         <children>
+            <Label text="Room Name" textFill="#2c3e50">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="roomNameChoiceBox" prefWidth="500.0" />
+         </children>
+      </VBox>
       <VBox spacing="15" prefWidth="500.0">
          <children>
             <Label text="Add New Expense" textFill="#2c3e50">
@@ -30,7 +42,7 @@
             </Label>
             <TextField fx:id="expenseNameField" promptText="Expense Name (e.g., Groceries, Restaurant, Utilities) *" />
             <TextField fx:id="amountField" promptText="Amount ($) *" />
-            <TextField fx:id="payerField" promptText="Who paid? (Roommate name) *" />
+            <ComboBox fx:id="payerComboBox" promptText="Who paid? (Select roommate) *" editable="false" prefWidth="500.0" />
             <TextField fx:id="splitBetweenField" promptText="Split between how many people? (e.g., 3 for 3 roommates)" />
             <Button fx:id="addExpenseButton" mnemonicParsing="false" onAction="#onAddExpenseClick" prefHeight="35.0" prefWidth="500.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 5;" text="Add Expense" />
          </children>

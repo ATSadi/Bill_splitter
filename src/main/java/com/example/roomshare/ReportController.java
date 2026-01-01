@@ -3,14 +3,15 @@ package com.example.roomshare;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class ReportController {
+
+    @FXML
+    private ChoiceBox<String> roomNameChoiceBox;
 
     @FXML
     private TextArea reportTextArea;
@@ -24,22 +25,35 @@ public class ReportController {
     @FXML
     private Label statusLabel;
 
+    private DatabaseHelper db = DatabaseHelper.getInstance();
+
     @FXML
     private void initialize() {
-        statusLabel.setText("Click 'Generate Report' to see summaries and statistics");
-        reportTextArea.setText("No report generated yet.\nClick 'Generate Report' to see statistics.");
+        statusLabel.setText("Select room name and click 'Generate Report'");
+        reportTextArea.setText("No report generated yet.\nSelect room name and click 'Generate Report' to see statistics.");
+        loadRooms();
+    }
+
+    private void loadRooms() {
+        roomNameChoiceBox.getItems().setAll(db.getAllRooms());
     }
 
     @FXML
     private void onGenerateReportClick() {
-        StringBuilder report = new StringBuilder();
-        report.append("=== RoomShare Reports & Statistics ===\n\n");
-        report.append("Reports will be available after integrating the database.\n\n");
-        report.append("Once the database is integrated, you will see:\n");
-        report.append("- Chore Statistics (total, completed, pending, per roommate)\n");
-        report.append("- Expense Statistics (total expenses, amount spent, averages, by category)\n");
-        report.append("- Fairness Metrics (chore distribution, expense contribution, balance status)\n");
-        reportTextArea.setText(report.toString());
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
+        String report = db.generateReport(roomId);
+        reportTextArea.setText(report);
         statusLabel.setText("Report generated");
     }
 

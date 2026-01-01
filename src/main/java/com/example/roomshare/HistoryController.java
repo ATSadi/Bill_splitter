@@ -3,15 +3,15 @@ package com.example.roomshare;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class HistoryController {
+
+    @FXML
+    private ChoiceBox<String> roomNameChoiceBox;
 
     @FXML
     private TextField filterField;
@@ -31,38 +31,54 @@ public class HistoryController {
     @FXML
     private Label statusLabel;
 
+    private DatabaseHelper db = DatabaseHelper.getInstance();
+
     @FXML
     private void initialize() {
-        statusLabel.setText("Enter filter text and click 'Filter' to search history");
-        historyList.getItems().add("Sample history items (will show actual data when database is integrated):");
-        historyList.getItems().add("[X] Clean kitchen - Assigned to: John (Completed)");
-        historyList.getItems().add("Groceries - $100.00 paid by Sarah (Split 3 ways, $33.33 each)");
-        historyList.getItems().add("[ ] Take out garbage - Assigned to: Mike (Pending)");
+        statusLabel.setText("Select room name and filter history");
+        loadRooms();
+        roomNameChoiceBox.setOnAction(e -> onFilterClick());
+    }
+
+    private void loadRooms() {
+        roomNameChoiceBox.getItems().setAll(db.getAllRooms());
     }
 
     @FXML
     private void onFilterClick() {
-        String filterText = filterField.getText().trim().toLowerCase();
-        
-        if (filterText.isEmpty()) {
-            statusLabel.setText("Please enter text to filter");
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
             return;
         }
-        
-        historyList.getItems().clear();
-        historyList.getItems().add("Filtered results for: " + filterField.getText().trim());
-        historyList.getItems().add("(In full version, this will filter actual database records)");
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
+        String filterText = filterField.getText().trim();
+        historyList.getItems().setAll(db.getHistory(roomId, filterText));
         statusLabel.setText("Filter applied");
     }
 
     @FXML
     private void onClearFilterClick() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
         filterField.clear();
-        historyList.getItems().clear();
-        historyList.getItems().add("All history items:");
-        historyList.getItems().add("[X] Clean kitchen - Assigned to: John (Completed)");
-        historyList.getItems().add("Groceries - $100.00 paid by Sarah (Split 3 ways, $33.33 each)");
-        historyList.getItems().add("[ ] Take out garbage - Assigned to: Mike (Pending)");
+        historyList.getItems().setAll(db.getHistory(roomId, null));
         statusLabel.setText("Filter cleared");
     }
 

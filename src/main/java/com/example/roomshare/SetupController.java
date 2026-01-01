@@ -11,6 +11,15 @@ import java.io.IOException;
 public class SetupController {
 
     @FXML
+    private ChoiceBox<String> roomNameChoiceBox;
+
+    @FXML
+    private TextField newRoomNameField;
+
+    @FXML
+    private Button addRoomButton;
+
+    @FXML
     private TextField roommateNameField;
 
     @FXML
@@ -43,13 +52,52 @@ public class SetupController {
     @FXML
     private Label statusLabel;
 
+    private DatabaseHelper db = DatabaseHelper.getInstance();
+
     @FXML
     private void initialize() {
-        statusLabel.setText("Add roommates and shared bills to get started");
+        statusLabel.setText("Select room name and add roommates/bills");
+        loadRooms();
+        roomNameChoiceBox.setOnAction(e -> refreshLists());
+    }
+
+    private void loadRooms() {
+        roomNameChoiceBox.getItems().setAll(db.getAllRooms());
+    }
+
+    @FXML
+    private void onAddRoomClick() {
+        String newRoomName = newRoomNameField.getText().trim();
+        if (newRoomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name");
+            return;
+        }
+        int roomId = db.createOrGetRoom(newRoomName);
+        if (roomId != -1) {
+            newRoomNameField.clear();
+            loadRooms();
+            roomNameChoiceBox.setValue(newRoomName);
+            statusLabel.setText("Room created: " + newRoomName);
+            refreshLists();
+        } else {
+            statusLabel.setText("Error creating room");
+        }
     }
 
     @FXML
     private void onAddRoommateClick() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
         String name = roommateNameField.getText().trim();
         String email = roommateEmailField.getText().trim();
         String phone = roommatePhoneField.getText().trim();
@@ -59,41 +107,77 @@ public class SetupController {
             return;
         }
 
-        String roommateInfo = name;
-        if (!email.isEmpty()) {
-            roommateInfo += " - " + email;
-        }
-        if (!phone.isEmpty()) {
-            roommateInfo += " - " + phone;
+        if (db.isPersonInAnyRoom(name)) {
+            statusLabel.setText("Error: " + name + " is already assigned to another room. A person can only be in one room.");
+            return;
         }
 
-        roommatesList.getItems().add(roommateInfo);
+        db.addRoommate(name, email, phone, roomId);
         roommateNameField.clear();
         roommateEmailField.clear();
         roommatePhoneField.clear();
         statusLabel.setText("Roommate added: " + name);
+        loadRooms();
+        refreshLists();
     }
 
     @FXML
     private void onAddBillClick() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
         String billName = billNameField.getText().trim();
-        String amount = billAmountField.getText().trim();
+        String amountStr = billAmountField.getText().trim();
 
         if (billName.isEmpty()) {
             statusLabel.setText("Please enter a bill name");
             return;
         }
 
-        if (amount.isEmpty()) {
+        if (amountStr.isEmpty()) {
             statusLabel.setText("Please enter an amount");
             return;
         }
 
-        String billInfo = billName + " - $" + amount;
-        billsList.getItems().add(billInfo);
-        billNameField.clear();
-        billAmountField.clear();
-        statusLabel.setText("Bill added: " + billName);
+        try {
+            double amount = Double.parseDouble(amountStr);
+            if (amount <= 0) {
+                statusLabel.setText("Amount must be greater than 0");
+                return;
+            }
+            db.addBill(billName, amount, roomId);
+            billNameField.clear();
+            billAmountField.clear();
+            statusLabel.setText("Bill added: " + billName);
+            loadRooms();
+            refreshLists();
+        } catch (NumberFormatException e) {
+            statusLabel.setText("Please enter a valid amount");
+        }
+    }
+
+    private void refreshLists() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            roommatesList.getItems().clear();
+            billsList.getItems().clear();
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId != -1) {
+            roommatesList.getItems().setAll(db.getRoommates(roomId));
+            billsList.getItems().setAll(db.getBills(roomId));
+        }
     }
 
     @FXML

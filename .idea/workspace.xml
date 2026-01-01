@@ -6,11 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="02eadf22-8b43-4dba-86c4-d6d51d594c54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/RoomShareApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/RoomShareApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/BalanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/BalanceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/BillController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/BillController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/ChoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/ChoreController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/HistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/HistoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/ReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/ReportController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/SetupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/SetupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/roomshare/WelcomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/roomshare/WelcomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/balance-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/balance-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/bill-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/bill-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/chore-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/chore-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/history-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/history-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/report-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/report-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/setup-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/roomshare/setup-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,24 +45,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Launcher.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "configurable.group.language",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.language&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="Python.FlaskServer">
       <module name="Bill_splitter" />

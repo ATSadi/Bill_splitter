@@ -3,15 +3,15 @@ package com.example.roomshare;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class BillController {
+
+    @FXML
+    private ChoiceBox<String> roomNameChoiceBox;
 
     @FXML
     private TextField expenseNameField;
@@ -20,7 +20,7 @@ public class BillController {
     private TextField amountField;
 
     @FXML
-    private TextField payerField;
+    private ComboBox<String> payerComboBox;
 
     @FXML
     private TextField splitBetweenField;
@@ -37,16 +37,50 @@ public class BillController {
     @FXML
     private Label statusLabel;
 
+    private DatabaseHelper db = DatabaseHelper.getInstance();
+
     @FXML
     private void initialize() {
-        statusLabel.setText("Add actual expenses (not bill categories). Split count = number of people sharing.");
+        statusLabel.setText("Select room name and select payer from dropdown");
+        loadRooms();
+        roomNameChoiceBox.setOnAction(e -> {
+            loadRoommates();
+            refreshExpenses();
+        });
+    }
+
+    private void loadRooms() {
+        roomNameChoiceBox.getItems().setAll(db.getAllRooms());
+    }
+
+    private void loadRoommates() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            return;
+        }
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId != -1) {
+            payerComboBox.getItems().setAll(db.getRoommateNames(roomId));
+        }
     }
 
     @FXML
     private void onAddExpenseClick() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            statusLabel.setText("Please enter a room name first");
+            return;
+        }
+
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId == -1) {
+            statusLabel.setText("Error creating/accessing room");
+            return;
+        }
+
         String expenseName = expenseNameField.getText().trim();
         String amountStr = amountField.getText().trim();
-        String payer = payerField.getText().trim();
+        String payerName = payerComboBox.getValue();
         String splitStr = splitBetweenField.getText().trim();
 
         if (expenseName.isEmpty()) {
@@ -59,22 +93,8 @@ public class BillController {
             return;
         }
 
-        try {
-            double amount = Double.parseDouble(amountStr);
-        } catch (NumberFormatException e) {
-            statusLabel.setText("Please enter a valid amount (numbers only)");
-            return;
-        }
-
-        double amount = Double.parseDouble(amountStr);
-        
-        if (amount <= 0) {
-            statusLabel.setText("Amount must be greater than 0");
-            return;
-        }
-
-        if (payer.isEmpty()) {
-            statusLabel.setText("Please enter who paid for this expense");
+        if (payerName == null || payerName.isEmpty()) {
+            statusLabel.setText("Please select who paid from the dropdown");
             return;
         }
 
@@ -83,28 +103,46 @@ public class BillController {
         }
 
         try {
+            double amount = Double.parseDouble(amountStr);
+            if (amount <= 0) {
+                statusLabel.setText("Amount must be greater than 0");
+                return;
+            }
+
+            Integer payerId = db.getRoommateIdByName(roomId, payerName);
+            if (payerId == null) {
+                statusLabel.setText("Error: Payer not found in this room");
+                return;
+            }
+
             int splitCount = Integer.parseInt(splitStr);
-            
             if (splitCount < 1) {
                 statusLabel.setText("Split count must be at least 1");
                 return;
             }
-            
-            double perPerson = amount / splitCount;
-            String perPersonStr = String.format("%.2f", perPerson);
-            
-            String expenseInfo = expenseName + " - $" + String.format("%.2f", amount) + 
-                                " paid by " + payer + " (Split " + splitCount + " ways, $" + perPersonStr + " each)";
-            
-            expensesList.getItems().add(expenseInfo);
+
+            db.addExpense(expenseName, amount, payerId, roomId, splitCount);
             expenseNameField.clear();
             amountField.clear();
-            payerField.clear();
+            payerComboBox.setValue(null);
             splitBetweenField.clear();
             statusLabel.setText("Expense added: " + expenseName);
-            
+            loadRooms();
+            refreshExpenses();
         } catch (NumberFormatException e) {
-            statusLabel.setText("Please enter a valid split count (numbers only)");
+            statusLabel.setText("Please enter valid numbers for amount and split count");
+        }
+    }
+
+    private void refreshExpenses() {
+        String roomName = roomNameChoiceBox.getValue() != null ? roomNameChoiceBox.getValue().trim() : "";
+        if (roomName.isEmpty()) {
+            expensesList.getItems().clear();
+            return;
+        }
+        int roomId = db.createOrGetRoom(roomName);
+        if (roomId != -1) {
+            expensesList.getItems().setAll(db.getExpenses(roomId));
         }
     }
 
